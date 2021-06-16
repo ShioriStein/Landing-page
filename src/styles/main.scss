@@ -1,0 +1,30 @@
+:root {
+    --primary-color: #5e909b;
+    --secondary-color: #839B97;
+    --background-color: #ececec;
+    --sub-background-color:#f7f7e8;
+  --primary-text-color: rgba(0, 0, 0, 0.6);
+  }
+  
+  ::-webkit-scrollbar {
+    width: .5rem;
+    height: .5rem;
+    background: #FFFFFF;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    background-color: var(--background-color);
+    -webkit-transition: background-color .15s;
+    transition: background-color .15s;
+  }
+  
+  ::-webkit-scrollbar-track {
+    border-radius: 0;
+  }
+  .v-application {
+    font-family: $body-font-family, sans-serif !important;
+     .title { // To pin point specific classes of some components
+        font-family: $title-font, sans-serif !important;
+     }
+  }
