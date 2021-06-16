@@ -1,38 +1,43 @@
 <template>
   <v-app>
-    <navigation :color="color" :flat="flat" />
-    <v-main class="pt-0">
-      <home />
-      <about />
-      <download />
-      <pricing :plans="plansCache" @getPlans="getPlansPackage" />
-      <contact />
-    </v-main>
-    <v-scale-transition>
-      <v-btn
-        fab
-        v-show="fab"
-        v-scroll="onScroll"
-        dark
-        fixed
-        bottom
-        right
-        color="secondary"
-        @click="toTop"
-      >
-        <v-icon>mdi-arrow-up</v-icon>
-      </v-btn>
-    </v-scale-transition>
-    <foote />
-    <vLoading
-      :message="actionMessage"
-      :closeSignal="closeSignal"
-      :actionSignal="actionSignal"
-      @updateActionSignal="
-        actionSignal = $event;
-        closeSignal = false;
-      "
-    />
+    <v-overlay :value="!overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
+    <div v-show="overlay">
+      <navigation :color="color" :flat="flat" />
+      <v-main class="pt-0">
+        <home />
+        <about />
+        <download />
+        <pricing :plans="plansCache" @getPlans="getPlansPackage" />
+        <contact />
+      </v-main>
+      <v-scale-transition>
+        <v-btn
+          fab
+          v-show="fab"
+          v-scroll="onScroll"
+          dark
+          fixed
+          bottom
+          right
+          color="secondary"
+          @click="toTop"
+        >
+          <v-icon>mdi-arrow-up</v-icon>
+        </v-btn>
+      </v-scale-transition>
+      <foote />
+      <vLoading
+        :message="actionMessage"
+        :closeSignal="closeSignal"
+        :actionSignal="actionSignal"
+        @updateActionSignal="
+          actionSignal = $event;
+          closeSignal = false;
+        "
+      />
+    </div>
   </v-app>
 </template>
 
@@ -77,6 +82,7 @@ export default {
     closeSignal: false,
     actionSignal: false,
     actionMessage: "",
+    overlay: false,
     plansCache: [
       {
         id: 0,
@@ -96,6 +102,7 @@ export default {
       this.flat = true;
     }
     this.getPlans().then(() => {
+      this.overlay = true;
       this.plansCache = this.plans;
     });
   },
