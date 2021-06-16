@@ -5,7 +5,7 @@
       <home />
       <about />
       <download />
-      <pricing :plans="plansCache" />
+      <pricing :plans="plansCache" @getPlans="getPlansPackage" />
       <contact />
     </v-main>
     <v-scale-transition>
@@ -24,6 +24,15 @@
       </v-btn>
     </v-scale-transition>
     <foote />
+    <vLoading
+      :message="actionMessage"
+      :closeSignal="closeSignal"
+      :actionSignal="actionSignal"
+      @updateActionSignal="
+        actionSignal = $event;
+        closeSignal = false;
+      "
+    />
   </v-app>
 </template>
 
@@ -44,6 +53,7 @@ import about from "./components/AboutSection";
 import download from "./components/DownloadSection";
 import pricing from "./components/PricingSection";
 import contact from "./components/ContactSection";
+import vLoading from "@/components/Notification/vLoading";
 import { mapActions, mapState } from "vuex";
 
 export default {
@@ -56,13 +66,17 @@ export default {
     about,
     download,
     pricing,
-    contact
+    contact,
+    vLoading
   },
 
   data: () => ({
     fab: null,
     color: "",
     flat: null,
+    closeSignal: false,
+    actionSignal: false,
+    actionMessage: "",
     plansCache: [
       {
         id: 0,
@@ -106,7 +120,7 @@ export default {
   },
 
   methods: {
-    ...mapActions("plans", ["getPlans"]),
+    ...mapActions("plans", ["getPlans", "upgradePlans"]),
     onScroll(e) {
       if (typeof window === "undefined") return;
       const top = window.pageYOffset || e.target.scrollTop || 0;
@@ -114,6 +128,20 @@ export default {
     },
     toTop() {
       this.$vuetify.goTo(0);
+    },
+    getPlansPackage(id) {
+      this.actionMessage = "Processing";
+      this.closeSignal = false;
+      this.actionSignal = true;
+      this.upgradePlans(id)
+        .then(() => {
+          this.actionMessage = "get plans success, please check your email";
+        })
+        .catch(() => {
+          this.actionMessage =
+            "an error have been occure while we trying to get your package, please try again";
+        })
+        .finally(() => (this.closeSignal = true));
     }
   }
 };

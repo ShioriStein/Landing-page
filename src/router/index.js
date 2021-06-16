@@ -14,6 +14,54 @@ const routes = [
     path: "/about",
     component: () => import("@/views/About"),
     name: "About"
+  },
+  {
+    path: "",
+    name: "FullPageLayout",
+    component: () =>
+      import(/* webpackChunkName: "FullPageLayout" */ "../layouts/FullPage"),
+    beforeEnter: (to, from, next) => {
+      const currentUser = JSON.parse(localStorage.getItem(CONSTANTS.USER));
+      if (currentUser) {
+        return next({ path: "/" });
+      }
+
+      document.title = "Login";
+      next();
+    },
+    children: [
+      {
+        path: ROUTERS.SIGN_IN,
+        name: PAGE_NAMES[ROUTERS.SIGN_IN],
+        component: () =>
+          import(/* webpackChunkName: "Login" */ "../views/pages/auths/Login"),
+        meta: {
+          requireLogout: true
+        }
+      },
+      {
+        path: ROUTERS.FORGOT_PASSWORD,
+        name: PAGE_NAMES[ROUTERS.FORGOT_PASSWORD],
+        component: () =>
+          import(
+            /* webpackChunkName: "Login" */ "../views/pages/auths/vForgotPassword"
+          ),
+        meta: {
+          requireLogout: true
+        }
+      },
+      {
+        path: ROUTERS.RESET_PASSWORD,
+        name: PAGE_NAMES[ROUTERS.RESET_PASSWORD],
+        component: () =>
+          import(
+            /* webpackChunkName: "Login" */ "../views/pages/auths/vResetPassword"
+          ),
+        meta: {
+          requireLogout: true
+        }
+      }
+    ]
   }
 ];
 

@@ -27,6 +27,24 @@ export default {
         });
     });
   },
+  upgradePlans({ dispatch, commit }, payload) {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${ENDPOINTS.PLANS.UPGRADE}`, {
+          packageId: payload
+        })
+        .then(res => {
+          commit("SET_PLANS", res.data.data);
+          resolve(res);
+        })
+        .catch(err => {
+          dispatch("errors/setErrors", err.response.data.message, {
+            root: true
+          });
+          reject(err);
+        });
+    });
+  },
   resetPlans: ({ commit }) => {
     commit("SET_PLANS", []);
   },

@@ -18,7 +18,8 @@
           </div>
           <div v-show="closeSignal" class="text-center">
             <h2>{{ message }}</h2>
-            <v-icon x-large>mdi-check-circle </v-icon>
+            <v-icon v-show="!errorProcess" x-large>mdi-check-circle </v-icon>
+            <v-icon v-show="errorProcess" x-large>mdi-close-circle </v-icon>
           </div>
         </v-card-text>
       </v-card>
@@ -27,6 +28,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   props: {
     toggle: {
@@ -78,11 +81,15 @@ export default {
     }
   },
   computed: {
+    ...mapState("errors", ["error"]),
     getType() {
       return this.typeAlert || this.test;
     },
     getToggle() {
       return this.toggle;
+    },
+    errorProcess() {
+      return this.error ? true : false;
     }
   }
 };
