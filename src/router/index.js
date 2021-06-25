@@ -36,7 +36,6 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "Login" */ "../views/pages/auths/Login"),
         meta: {
-          requireLogout: true
         }
       },
       {
@@ -47,7 +46,6 @@ const routes = [
             /* webpackChunkName: "Login" */ "../views/pages/auths/vForgotPassword"
           ),
         meta: {
-          requireLogout: true
         }
       },
       {
@@ -58,7 +56,6 @@ const routes = [
             /* webpackChunkName: "Login" */ "../views/pages/auths/vResetPassword"
           ),
         meta: {
-          requireLogout: true
         }
       }
     ]

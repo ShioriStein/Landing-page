@@ -7,6 +7,7 @@ const { ROUTERS, PAGE_NAMES } = CONSTANTS;
 const { TOKEN, ENDPOINTS } = CONSTANTS;
 
 axios.interceptors.request.use(config => {
+  console.log(config)
   const { companyId } = router.currentRoute.params;
   if (companyId) {
     config.headers["X-Company-Id"] = companyId;

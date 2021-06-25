@@ -61,6 +61,10 @@ import contact from "./components/ContactSection";
 import vLoading from "@/components/Notification/vLoading";
 import { mapActions, mapState } from "vuex";
 
+import CONSTANTS from "@/constants";
+
+const { ROUTERS, PAGE_NAMES } = CONSTANTS;
+
 export default {
   name: "Home",
 
@@ -109,7 +113,11 @@ export default {
   computed: {
     ...mapState("auths", ["permissions", "roles"]),
     ...mapState("errors", ["error"]),
-    ...mapState("plans", ["plans"])
+    ...mapState("plans", ["plans"]),
+    isLogin() {
+      const currentUser = JSON.parse(localStorage.getItem(CONSTANTS.USER));
+      return currentUser ? true : false;
+    }
   },
   watch: {
     fab(value) {
@@ -137,7 +145,8 @@ export default {
       this.$vuetify.goTo(0);
     },
     getPlansPackage(id) {
-      this.actionMessage = "Processing";
+      if(this.isLogin)
+      {this.actionMessage = "Processing";
       this.closeSignal = false;
       this.actionSignal = true;
       this.upgradePlans(id)
@@ -148,7 +157,22 @@ export default {
           this.actionMessage =
             "an error have been occure while we trying to get your package, please try again";
         })
-        .finally(() => (this.closeSignal = true));
+        .finally(() => (this.closeSignal = true));}
+      
+      else
+      {
+        this.logins()
+      }
+
+    },
+    logins() {
+      const { fullPath: returnUrl } = this.$router.currentRoute;
+      this.$router.push({
+        name: PAGE_NAMES[ROUTERS.SIGN_IN],
+        query: {
+          returnUrl
+        }
+      });
     }
   }
 };
